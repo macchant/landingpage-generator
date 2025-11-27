@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Prompt Architect v2.1</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
+                    colors: { dark: '#09090b', surface: '#18181b', accent: '#3b82f6' }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-dark text-slate-300 min-h-screen p-6 md:p-12 font-sans selection:bg-accent selection:text-white flex flex-col justify-center">
+
+    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 w-full">
+        
+        <div class="lg:col-span-12 flex justify-between items-end border-b border-white/10 pb-6">
+            <div>
+                <h1 class="text-3xl font-bold text-white tracking-tight mb-2">Prompt Architect <span class="text-accent">v2.1</span></h1>
+                <p class="text-sm text-slate-500">Generate "Anti-Lazy" system prompts for high-tier UI development.</p>
+            </div>
+            <div class="hidden md:block text-xs font-mono text-slate-600 border border-white/5 px-3 py-1 rounded-full">
+                SYSTEM: ONLINE
+            </div>
+        </div>
+
+        <div class="lg:col-span-7 space-y-8">
+            
+            <div class="bg-surface border border-white/5 p-6 rounded-2xl">
+                <label class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4 block">1. Core Archetype</label>
+                <div class="grid grid-cols-3 gap-3">
+                    <button onclick="setArchetype('Visual')" id="btn-Visual" class="arch-btn active p-4 border border-accent bg-accent/10 text-white rounded-xl text-left transition-all">
+                        <i class="ph-bold ph-paint-brush text-xl mb-2 text-accent"></i>
+                        <div class="font-bold text-sm">Visual / Brand</div>
+                        <div class="text-[10px] text-slate-400 mt-1">High-end Landing Pages</div>
+                    </button>
+                    <button onclick="setArchetype('SaaS')" id="btn-SaaS" class="arch-btn p-4 border border-white/10 hover:border-white/30 rounded-xl text-left transition-all">
+                        <i class="ph-bold ph-rocket-launch text-xl mb-2 text-purple-400"></i>
+                        <div class="font-bold text-sm">SaaS / App</div>
+                        <div class="text-[10px] text-slate-400 mt-1">Dashboards & Software</div>
+                    </button>
+                    <button onclick="setArchetype('Tool')" id="btn-Tool" class="arch-btn p-4 border border-white/10 hover:border-white/30 rounded-xl text-left transition-all">
+                        <i class="ph-bold ph-wrench text-xl mb-2 text-green-400"></i>
+                        <div class="font-bold text-sm">Micro-Tool</div>
+                        <div class="text-[10px] text-slate-400 mt-1">Calculators & Utilities</div>
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-surface border border-white/5 p-6 rounded-2xl">
+                <label class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4 block">2. Aesthetic DNA</label>
+                <div class="flex flex-wrap gap-2" id="style-container">
+                    </div>
+            </div>
+
+            <div class="bg-surface border border-white/5 p-6 rounded-2xl">
+                <label class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4 block">3. Mandatory Components</label>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="sections-container">
+                    </div>
+            </div>
+
+            <div class="bg-surface border border-white/5 p-6 rounded-2xl">
+                <label class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4 block">4. Specific Idea</label>
+                <input type="text" id="userIdea" onkeyup="updatePrompt()" placeholder="e.g. A luxury real estate site called 'ONYX' for penthouses in NYC" class="w-full bg-dark border border-white/10 rounded-xl p-4 text-white placeholder-slate-600 focus:outline-none focus:border-accent transition-colors font-mono text-sm">
+            </div>
+
+        </div>
+
+        <div class="lg:col-span-5 flex flex-col h-full">
+            <div class="sticky top-6 flex-1 flex flex-col">
+                <div class="bg-black border border-white/20 rounded-2xl overflow-hidden shadow-2xl flex flex-col flex-1">
+                    <div class="bg-white/5 border-b border-white/10 p-4 flex justify-between items-center">
+                        <span class="text-xs font-bold text-slate-400">FINAL SYSTEM PROMPT</span>
+                        <button onclick="copyToClipboard()" class="bg-white text-black px-4 py-1.5 rounded-full text-xs font-bold hover:bg-slate-200 transition-colors flex items-center gap-2">
+                            <i class="ph-bold ph-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="flex-1 p-0">
+                        <textarea id="output" class="w-full h-[600px] lg:h-full bg-black text-green-400 font-mono text-xs p-6 focus:outline-none resize-none leading-relaxed" readonly></textarea>
+                    </div>
+                </div>
+                <p class="text-center text-xs text-slate-600 mt-4">Paste this into a <span class="text-white font-bold">New Chat</span> for best results.</p>
+            </div>
+        </div>
+
+        <div class="lg:col-span-12 border-t border-white/10 pt-8 mt-4 flex flex-col md:flex-row justify-between items-center text-xs text-slate-600">
+            <span>&copy; 2025 Prompt Architect Tool.</span>
+            
+            <a href="https://github.com/macchant" target="_blank" class="flex items-center gap-2 hover:text-white transition-colors mt-4 md:mt-0 bg-white/5 px-4 py-2 rounded-full border border-white/5 hover:border-white/20">
+                <i class="ph-bold ph-github-logo text-lg"></i>
+                <span>Built by <span class="text-accent font-bold">@macchant</span></span>
+            </a>
+        </div>
+
+    </div>
+
+    <script>
+        // CONFIG DATA
+        const state = {
+            archetype: 'Visual',
+            style: 'Modern Luxury',
+            sections: []
+        };
+
+        const styles = {
+            'Visual': ['Modern Luxury', 'Brutalist', 'Swiss Minimal', 'Editorial/Fashion', 'Dark Mode Cinematic'],
+            'SaaS':   ['Bento Grid', 'Linear-like', 'Corporate Clean', 'Cyberpunk/Crypto', 'Glassmorphism'],
+            'Tool':   ['Stripe-like Clean', 'Neobrutalism', 'Technical/Dev', 'iOS App Style', 'Monochrome']
+        };
+
+        const sections = {
+            'Visual': ['Hero (Parallax)', 'Gallery Grid', 'About Story', 'Service List', 'Testimonials', 'Contact Form', 'Footer'],
+            'SaaS':   ['Hero + CTA', 'Trusted By Logos', 'Feature Grid', 'How it Works', 'Pricing Table', 'FAQ Accordion', 'Footer'],
+            'Tool':   ['Input Panel', 'Results Dashboard', 'Settings Modal', 'Data Visualization', 'Export Options', 'Side Navigation']
+        };
+
+        // INITIALIZE
+        function init() {
+            renderOptions();
+            updatePrompt();
+        }
+
+        // RENDER BUTTONS BASED ON ARCHETYPE
+        function renderOptions() {
+            // Render Styles
+            const styleContainer = document.getElementById('style-container');
+            styleContainer.innerHTML = styles[state.archetype].map(s => 
+                `<button onclick="setStyle('${s}')" class="style-btn ${state.style === s ? 'bg-white text-black' : 'bg-dark border border-white/20 text-slate-400 hover:border-white'} px-4 py-2 rounded-full text-xs font-bold transition-all">${s}</button>`
+            ).join('');
+
+            // Render Sections
+            const sectionContainer = document.getElementById('sections-container');
+            sectionContainer.innerHTML = sections[state.archetype].map(s => 
+                `<button onclick="toggleSection('${s}')" class="section-btn ${state.sections.includes(s) ? 'border-accent text-accent bg-accent/10' : 'border-white/10 text-slate-500 hover:text-white'} border p-3 rounded-lg text-xs font-medium text-left transition-all flex justify-between items-center">
+                    ${s} ${state.sections.includes(s) ? '<i class="ph-bold ph-check"></i>' : ''}
+                </button>`
+            ).join('');
+        }
+
+        // ACTIONS
+        window.setArchetype = (type) => {
+            state.archetype = type;
+            state.style = styles[type][0]; // Reset style to first
+            state.sections = []; // Reset sections
+            
+            // Update UI classes for Archetype Buttons
+            document.querySelectorAll('.arch-btn').forEach(btn => {
+                btn.className = 'arch-btn p-4 border border-white/10 hover:border-white/30 rounded-xl text-left transition-all';
+                btn.querySelector('i').className = btn.querySelector('i').className.replace('text-accent', 'text-slate-400').replace('text-purple-400', 'text-slate-400').replace('text-green-400', 'text-slate-400');
+            });
+            
+            const activeBtn = document.getElementById('btn-' + type);
+            activeBtn.className = 'arch-btn active p-4 border border-accent bg-accent/10 text-white rounded-xl text-left transition-all';
+            
+            // Re-render sub-options
+            renderOptions();
+            updatePrompt();
+        }
+
+        window.setStyle = (style) => {
+            state.style = style;
+            renderOptions();
+            updatePrompt();
+        }
+
+        window.toggleSection = (section) => {
+            if (state.sections.includes(section)) {
+                state.sections = state.sections.filter(s => s !== section);
+            } else {
+                state.sections.push(section);
+            }
+            renderOptions();
+            updatePrompt();
+        }
+
+        // PROMPT GENERATION LOGIC
+        window.updatePrompt = () => {
+            const idea = document.getElementById('userIdea').value || "[INSERT YOUR IDEA HERE]";
+            const sectionList = state.sections.length > 0 ? state.sections.join(', ') : "Standard Layout";
+            
+            let role = "Senior Frontend Developer";
+            if (state.archetype === 'Visual') role = "Awwwards-Winning UI/UX Designer";
+            if (state.archetype === 'SaaS') role = "Y-Combinator Startup Product Designer";
+            if (state.archetype === 'Tool') role = "Senior Javascript Engineer";
+
+            let techExtra = "";
+            if (state.archetype === 'Tool') techExtra = "\n4. Complex Vanilla JS (State Management).\n5. Chart.js (if needed for data).";
+            if (state.archetype === 'Visual') techExtra = "\n4. GSAP (via CDN) for smooth animations.\n5. Lenis Scroll (via CDN).";
+
+            const prompt = `ACT AS: ${role}.
+
+TASK: Create a Single-File HTML/CSS/JS Prototype (Production Ready).
+
+CONTEXT:
+We are building a "${state.archetype}" style project.
+Specific Idea: ${idea}
+
+VISUAL STYLE: "${state.style}"
+- Use a color palette matching this style.
+- Use high-quality fonts (Google Fonts) that fit this vibe.
+- Use Phosphor Icons.
+
+TECH STACK:
+1. HTML5 (Semantic).
+2. Tailwind CSS (via CDN) - Configure theme in script tag.
+3. Vanilla JavaScript.${techExtra}
+
+MANDATORY SECTIONS TO BUILD:
+${sectionList}
+
+STRICT OUTPUT RULES:
+1. NO PLACEHOLDERS: Write real, professional copy. Do not use Lorem Ipsum.
+2. FULL CODE: Output the entire index.html file in one block. Do not truncate.
+3. IMAGERY: Use specific, high-quality Unsplash source URLs. Do not use gray boxes.
+4. MOBILE: The design must be fully responsive.
+5. INTERACTIVITY:
+   - Hover effects on all buttons/cards.
+   - Smooth scroll behavior.
+   - Mobile menu must work.
+
+GOAL: The output must be ready to copy-paste and look like a premium $50 template.
+
+START CODING.`;
+
+            document.getElementById('output').value = prompt;
+        }
+
+        window.copyToClipboard = () => {
+            const copyText = document.getElementById("output");
+            copyText.select();
+            document.execCommand("copy");
+            const btn = document.querySelector('button[onclick="copyToClipboard()"]');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="ph-bold ph-check"></i> Copied!';
+            setTimeout(() => { btn.innerHTML = originalText; }, 2000);
+        }
+
+        // Run on load
+        init();
+    </script>
+</body>
+</html>
