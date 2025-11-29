@@ -56,4 +56,4 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ---
 
-> Built by [YOUR_USERNAME](https://github.com/YOUR_USERNAME)
+> Built by [macchant](https://github.com/macchant)
